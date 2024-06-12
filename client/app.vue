@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div>{{ testData }}</div>
-    <button @click='fetchData' type='button'>testest</button>
+    <div>{{ testData }} {{ count }}</div>
+    <button @click='fetchData' type='button' class='bg-red-500 text-blue-500'>click for test</button>
     <NuxtRouteAnnouncer />
     <NuxtWelcome />
   </div>
@@ -10,7 +10,10 @@
 <script>
 export default {
   data() {
-    return { testData: '' }
+    return {
+      testData: '',
+      count: 0,
+    }
   },
   methods: {
     fetchData() {
@@ -23,6 +26,7 @@ export default {
         })
         .then(data => {
           this.testData = data;
+          this.count += 1;
           // Добавьте код для обновления содержимого вашего div на основании полученных данных
         })
         .catch(error => {
