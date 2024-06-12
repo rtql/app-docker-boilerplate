@@ -1,5 +1,9 @@
 version: "3"
 
+networks:
+  default:
+    driver: bridge
+
 services:
   nginx:
     image: "nginx:stable-alpine"
@@ -11,9 +15,48 @@ services:
       - ./api:/var/www/api
   php:
     container_name: "backend"
-#    image: "php:8.2-fpm-alpine"
     build:
       context: ./docker/php
       dockerfile: Dockerfile
     volumes:
       - ./api:/var/www/api
+  db:
+    container_name: "db"
+    image: mariadb:latest
+    networks:
+      - default
+    ports:
+      - "3336:3306"
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: poseidon
+  redis:
+    image: redis:latest
+    container_name: "redis"
+    command: [ "redis-server", "--bind", "0.0.0.0", "--port", "6379" ]
+    restart: always
+    hostname: 127.0.0.1
+    networks:
+      - default
+    ports:
+      - "6379:6379"
+  phpmyadmin:
+    container_name: "pma"
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - "8081:80"
+  mailhog:
+    container_name: "mailhog"
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+    networks:
+      - default
