@@ -1,22 +1,33 @@
 <template>
-  <div>
-    <div>{{ testData }} {{ count }}</div>
-    <button @click='fetchData' type='button' class='bg-red-500 text-blue-500'>click for test</button>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+  <Welcome>
+    <HelloFromBackend></HelloFromBackend>
+  </Welcome>
 </template>
 
 <script>
+import Welcome from '~/layouts/Welcome.vue';
+import HelloFromBackend from '~/components/HelloFromBackend.vue';
+
 export default {
-  data() {
+  components: { Welcome, HelloFromBackend },
+
+  setup() {
+    useSeoMeta({
+      title: 'Nuxt3 + Laravel',
+    })
+  },
+
+  data () {
     return {
       testData: '',
-      count: 0,
-    }
+      count: null,
+      countText: '',
+    };
   },
+
+
   methods: {
-    fetchData() {
+    fetchData () {
       fetch('http://localhost:81/api')
         .then(response => {
           if (!response.ok) {
@@ -27,13 +38,14 @@ export default {
         .then(data => {
           this.testData = data;
           this.count += 1;
+          this.countText = 'times';
           // Добавьте код для обновления содержимого вашего div на основании полученных данных
         })
         .catch(error => {
           console.error('There was a problem with the fetch operation:', error);
           alert('Ошибка при получении данных:', error.message);
         });
-    }
-  }
-}
+    },
+  },
+};
 </script>
