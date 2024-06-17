@@ -30,7 +30,7 @@ export default {
 
   methods: {
     fetchData () {
-      fetch('http://localhost:81/api')
+      fetch('http://localhost/api')
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');

@@ -39,7 +39,6 @@ export default {
           this.testData = data;
           this.count += 1;
           this.countText = 'times';
-          // Добавьте код для обновления содержимого вашего div на основании полученных данных
         })
         .catch(error => {
           console.error('There was a problem with the fetch operation:', error);
